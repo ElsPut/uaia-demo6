@@ -1,6 +1,10 @@
 name: deploy-sa
 on:
   workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
   
 env:
  AZ_RG_NAME: RG6
@@ -15,9 +19,9 @@ jobs:
       - name: sign in to Azure
         uses: azure/login@v1
         with:
-          client-id: 
-          tenant-id: 
-          subscription-id: 
+          client-id: ${{secrets.AZ_CLIENT_ID}}
+          tenant-id: ${{secrets.AZ_TENANT_ID}}
+          subscription-id: ${{secrets.AZ_SUB_ID}}
 
       - name: deploy RG
         uses: azure/cli@v1
@@ -30,4 +34,4 @@ jobs:
         with:
          deploymentName: ${{github.run_Number}}
          resourceGroupName: ${{env.AZ_RG_NAME}}
-         template: ./sa.bicep
+         template: ./storage.bicep
